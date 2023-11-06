@@ -1,3 +1,5 @@
+import AppError from "../utils/AppError.js"
+
 export default class UsersController {
     /**
      * Controller has 5 methods
@@ -17,6 +19,11 @@ export default class UsersController {
 
     create(req, res) {
         const { name, email, password } = req.body
+
+        if(!name) {
+            throw new AppError('name is required')
+        }
+
         res.status(201).json({
             name, email, password
         })
