@@ -2,6 +2,7 @@
 import express from 'express'
 import "express-async-errors"
 
+import database from './database/sqlite/index.js'
 import AppError from './utils/AppError.js'
 import routes from './routes/index.js'
 
@@ -26,6 +27,16 @@ app.use((err, req, res, next) => {
     });
 })
 
-// Run Server
-const PORT = process.env.PORT || 3333
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`))
+try {
+    // run database
+    await database()
+
+    // Run Server
+    const PORT = process.env.PORT || 3333
+    app.listen(PORT, () => {
+        console.clear()
+        console.log(`Server is running on port ${PORT}`)
+    })
+} catch (err) {
+    console.error(err)
+}

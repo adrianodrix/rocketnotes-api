@@ -15,5 +15,6 @@ function myMiddleware(req, res, next) {
 // Others methods
 usersRouter.get('/', usersController.index)
 usersRouter.post('/', myMiddleware, usersController.create)
+usersRouter.put('/:id', usersController.update)
 
 export default usersRouter
