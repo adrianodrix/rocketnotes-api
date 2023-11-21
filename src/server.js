@@ -5,10 +5,13 @@ import "express-async-errors"
 import database from './database/sqlite/index.js'
 import AppError from './utils/AppError.js'
 import routes from './routes/index.js'
+import uploadConfig from './configs/upload.js'
 
 export const app = express()
 
 app.use(express.json())
+app.use('/files', express.static(uploadConfig.UPLOADS_FOLDER))
+
 app.use(routes)
 
 app.use((err, req, res, next) => {
@@ -27,10 +30,10 @@ app.use((err, req, res, next) => {
     });
 })
 
+
 try {
     // run database
     await database()
-
     // Run Server
     const PORT = process.env.PORT || 3333
     app.listen(PORT, () => {

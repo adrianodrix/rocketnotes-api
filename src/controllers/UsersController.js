@@ -54,7 +54,7 @@ export default class UsersController {
     }
 
     async update(req, res) {
-        const { id } = req.params
+        const { id } = req.user
         const { name, email, avatar, password, old_password } = req.body
 
         if(password && !old_password) {
