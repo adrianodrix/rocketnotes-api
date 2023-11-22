@@ -5,8 +5,8 @@ export default class TagsController {
         const { id: user_id } = req.user
 
         const tags = await knex('tags')
-                            .distinct('name')
                             .where({ user_id })
+                            .groupBy('name')
                             .orderBy('name')
 
         res.json(tags)
