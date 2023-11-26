@@ -1,6 +1,8 @@
 import bcrypt from 'bcryptjs'
 import AppError from "../utils/AppError.js"
 import database from '../database/sqlite/index.js'
+import { UserRepository } from '../repositories/UserRepository.js'
+import { UserCreateService } from '../services/UserCreateService.js'
 
 export default class UsersController {
     /**
@@ -39,16 +41,10 @@ export default class UsersController {
             throw new AppError('password is required')
         }
 
-        const db = await database()
+        const userRepository = new UserRepository()
+        const userCreateService = new UserCreateService(userRepository)
 
-        const checkUserExists = await db.get('SELECT id FROM users WHERE email = ?', [ email ])        
-        if (checkUserExists) {    
-            throw new AppError(`${email} is already registered.`)
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 8)
-
-        await db.run('INSERT INTO users (name, email, password) VALUES (?,?,?)', [name, email, hashedPassword])
+        await userCreateService.execute({name, email, password})
 
         res.status(201).json({})
     }
